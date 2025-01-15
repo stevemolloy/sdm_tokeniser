@@ -8,7 +8,7 @@
 #define SDM_ARRAY_LENGTH(array) sizeof((array)) / sizeof((array[0]))
 
 typedef struct {
-  char *filename;
+  const char *filename;
   sdm_string_view contents;
   size_t line;
   size_t col;
@@ -72,7 +72,7 @@ typedef struct {
 bool starts_with_comment(Parser parser);
 size_t starts_with_float(Parser parser);
 Token get_next_token(Parser *parser);
-TokenArray tokenise_input_file(Parser *parser);
+void tokenise_input_file(Parser *parser, TokenArray *token_array);
 void parser_trim(Parser *parser);
 void parser_chop(Parser *parser, size_t len);
 

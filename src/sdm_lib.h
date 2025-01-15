@@ -237,7 +237,7 @@ void push_to_dblarray(DblArray *hm, char *key, double value);
 uint32_t get_hashmap_location(const char* key, size_t capacity);
 uint32_t jenkins_one_at_a_time_hash(const uint8_t* key, size_t length);
 
-#define SDM_ARENA_DEFAULT_CAP 256 * 1024*1024
+#define SDM_ARENA_DEFAULT_CAP 128 * 1024*1024
 
 typedef struct sdm_arena_t sdm_arena_t;
 

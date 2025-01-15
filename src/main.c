@@ -57,7 +57,8 @@ int main(void) {
     .index = 0,
   };
 
-  TokenArray token_array = tokenise_input_file(&parser);
+  TokenArray token_array = {0};
+  tokenise_input_file(&parser, &token_array);
   printf("Found %zu tokens, %zu lines, and %zu characters in %s\n", token_array.length, parser.line, parser.index, parser.filename);
 
   sdm_arena_free(&main_arena);

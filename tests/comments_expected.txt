@@ -1,0 +1,1 @@
+Found 1 tokens, 3 lines, and 38 characters in examples/comments.txt

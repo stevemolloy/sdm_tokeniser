@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <errno.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "token_lib.h"
@@ -71,16 +72,12 @@ Token get_next_token(Parser *parser) {
   return token;
 }
 
-TokenArray tokenise_input_file(Parser *parser) {
-  TokenArray token_array = {0};
-
+void tokenise_input_file(Parser *parser, TokenArray *token_array) {
   sdm_string_view contents = parser->contents;
 
   while (parser->index < contents.length) {
-    get_next_token(parser);
+    SDM_ARRAY_PUSH(*token_array, get_next_token(parser));
   }
-  
-  return token_array;
 }
 
 void parser_trim(Parser *parser) {
