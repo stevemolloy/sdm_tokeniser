@@ -127,8 +127,9 @@ Token get_next_token(Parser *parser) {
     memcpy(token.as.str_token.value, parser->contents.data+str_start, str_len);
     parser->index += str_len + 1;
   } else {
-    fprintf(stderr, "ERROR: Unsure how to parse '%c'\n", parser->contents.data[parser->index]);
-    exit(1);
+    fprintf(stderr, "WARNING: Unsure how to parse '%c'\n", parser->contents.data[parser->index]);
+    token.token_type = TOKEN_TYPE_UNKNOWN;
+    parser->index += 1;
   }
 
   return token;
