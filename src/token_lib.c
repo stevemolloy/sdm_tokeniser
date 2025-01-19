@@ -6,13 +6,6 @@
 #include "token_lib.h"
 #include "sdm_lib.h"
 
-const char *keywords[] = {
-  "let",
-  "int",
-  "float",
-  "Drift"
-};
-
 char *get_current_parser_string(Parser parser) {
   return parser.contents.data + parser.index;
 }
