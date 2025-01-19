@@ -94,6 +94,9 @@ Token get_next_token(Parser *parser) {
   } else if (parser_current_char(parser) == '+') {
     token.token_type = TOKEN_TYPE_ADD;
     parser->index += 1;
+  } else if (parser_current_char(parser) == '-') {
+    token.token_type = TOKEN_TYPE_SUB;
+    parser->index += 1;
   } else if (parser_current_char(parser) == '=') {
     token.token_type = TOKEN_TYPE_ASSIGNMENT;
     parser->index += 1;
@@ -104,7 +107,16 @@ Token get_next_token(Parser *parser) {
     token.token_type = TOKEN_TYPE_MULT;
     parser->index += 1;
   } else if (parser_current_char(parser) == ':') {
+    token.token_type = TOKEN_TYPE_COLON;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == ';') {
     token.token_type = TOKEN_TYPE_SEMICOLON;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == '(') {
+    token.token_type = TOKEN_TYPE_OPAREN;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == ')') {
+    token.token_type = TOKEN_TYPE_CPAREN;
     parser->index += 1;
   } else if (parser_current_char(parser) == '"') {
     // We have a string.  We have to find the end
