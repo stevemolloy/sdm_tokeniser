@@ -1,0 +1,10 @@
+Here is some random text, with some puncutation, numbers, and maths.
+
+2 + 2 = 4
+5 / 2 = 1.25 * 2.0
+
+A string: "Hello world!"
+
+An_ID_42
+
+

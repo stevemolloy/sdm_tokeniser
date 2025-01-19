@@ -1,0 +1,4 @@
+// Just a comment
+42
+42.42
+// Another comment

@@ -43,6 +43,21 @@ size_t starts_with_float(Parser parser) {
   return retval;
 }
 
+char parser_current_char(const Parser *parser) {
+  return parser->contents.data[parser->index];
+}
+
+bool parser_isalpha(const Parser *parser) {
+  return isalpha(parser_current_char(parser));
+}
+
+bool parser_is_id_char(const Parser *parser) {
+  return 
+    parser_isalpha(parser) || 
+    parser_current_char(parser) == '_' || 
+    isalnum(parser_current_char(parser));
+}
+
 Token get_next_token(Parser *parser) {
   parser_trim(parser);
 
@@ -54,7 +69,7 @@ Token get_next_token(Parser *parser) {
   Token token = {0};
   memcpy(&token.source, parser, sizeof(*parser));
   size_t len; // Only valid for the float/int part of the code
-  //
+
   if (parser->index >= parser->contents.length) {
     token.token_type = TOKEN_TYPE_EOF;
   } else if ((len = starts_with_float(*parser)) > 0) {
@@ -64,9 +79,56 @@ Token get_next_token(Parser *parser) {
     strtol(start_ptr, &end_ptr, 10);
     if ((end_ptr - start_ptr) == (long)len) {
       token.token_type = TOKEN_TYPE_INT;
+      token.as.int_token.value = atoi(start_ptr);
     } else {
       token.token_type = TOKEN_TYPE_FLOAT;
+      token.as.float_token.value = atof(start_ptr);
     }
+    parser->index += len;
+  } else if (parser_isalpha(parser)) {
+    size_t start_index = parser->index;
+    while (parser_is_id_char(parser)) parser->index++;
+    size_t len = parser->index - start_index;
+    token.token_type = TOKEN_TYPE_ID;
+    token.as.id_token.value = SDM_MALLOC((len+1) * sizeof(char));
+    memcpy(token.as.id_token.value, &parser->contents.data[start_index], len);
+  } else if (parser_current_char(parser) == ',') {
+    token.token_type = TOKEN_TYPE_COMMA;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == '.') {
+    token.token_type = TOKEN_TYPE_POINT;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == '+') {
+    token.token_type = TOKEN_TYPE_ADD;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == '=') {
+    token.token_type = TOKEN_TYPE_ASSIGNMENT;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == '/') {
+    token.token_type = TOKEN_TYPE_DIV;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == '*') {
+    token.token_type = TOKEN_TYPE_MULT;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == ':') {
+    token.token_type = TOKEN_TYPE_SEMICOLON;
+    parser->index += 1;
+  } else if (parser_current_char(parser) == '"') {
+    // We have a string.  We have to find the end
+    parser->index++;
+    size_t str_start = parser->index;
+    while ((parser->index < parser->contents.length) && (parser_current_char(parser) != '"')) {
+      parser->index++;
+    }
+    size_t str_len = parser->index - str_start;
+    token.token_type = TOKEN_TYPE_STRING;
+    token.as.str_token.value = SDM_MALLOC(str_len + 1);
+    memset(token.as.str_token.value, 0, str_len + 1);
+    memcpy(token.as.str_token.value, parser->contents.data+str_start, str_len);
+    parser->index += str_len + 1;
+  } else {
+    fprintf(stderr, "ERROR: Unsure how to parse '%c'\n", parser->contents.data[parser->index]);
+    exit(1);
   }
 
   return token;

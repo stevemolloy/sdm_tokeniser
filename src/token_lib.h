@@ -28,6 +28,7 @@ typedef struct {
 // } FileLoc;
 
 typedef enum {
+  TOKEN_TYPE_UNKNOWN = 0,
   TOKEN_TYPE_ID,
   TOKEN_TYPE_FLOAT,
   TOKEN_TYPE_INT,
@@ -52,6 +53,7 @@ typedef enum {
 typedef struct { char *value; } IDToken;
 typedef struct { double value; } FloatToken;
 typedef struct { int64_t value; } IntToken;
+typedef struct { char *value; } StringToken;
 
 typedef struct {
   TokenType token_type;
@@ -59,6 +61,7 @@ typedef struct {
     IDToken id_token;
     FloatToken float_token;
     IntToken int_token;
+    StringToken str_token;
   } as;
   Parser source;
 } Token;
